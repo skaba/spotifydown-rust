@@ -1,0 +1,17 @@
+[package]
+name = "spotifydown"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+env_logger = "0.11.8"
+librespot = "0.8.0"
+librespot-oauth = "0.8.0"
+log = "0.4.29"
+regex = "1.12.3"
+tokio = "1.49.0"
+strum = "0.27"
+strum_macros = "0.27"
+
+[patch.crates-io]
+librespot = { path = "../librespot" }
