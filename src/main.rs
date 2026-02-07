@@ -3,11 +3,10 @@ mod service;
 
 use service::download;
 use model::SpotifyTrack;
-use librespot::core::Error;
 use log::LevelFilter;
 
 #[tokio::main]
-async fn main() -> Result<(), Error> {
+async fn main() -> Result<(), std::io::Error> {
     env_logger::builder()
         .filter_module("librespot", LevelFilter::Info)
         .init();

@@ -5,15 +5,22 @@ edition = "2024"
 
 [dependencies]
 env_logger = "0.11.8"
-librespot = "0.8.0"
+librespot-core = "0.8.0"
 librespot-oauth = "0.8.0"
+librespot-audio = "0.8.0"
+librespot-discovery = "0.8.0"
+librespot-metadata = "0.8.0"
 log = "0.4.29"
 regex = "1.12.3"
-tokio = "1.49.0"
+tokio = { version = "1.49.0", features = ["rt", "macros", "rt-multi-thread"] }
 strum = "0.27"
 strum_macros = "0.27"
+dirs = "6.0.0"
 
 [patch.crates-io]
-librespot = { path = "librespot" }
+librespot-core = { path = "librespot/core" }
 librespot-oauth = { path = "librespot/oauth" }
+librespot-audio = { path = "librespot/audio" }
+librespot-discovery = { path = "librespot/discovery" }
+librespot-metadata = { path = "librespot/metadata" }
 
