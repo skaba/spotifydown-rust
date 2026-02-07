@@ -1,21 +1,17 @@
-use std::io::{Read, Write};
 use std::fs::File;
-
+use std::io::{Read, Seek, Write};
 
 use crate::model::SpotifyTrack;
 
 use librespot::discovery::Credentials;
 use librespot::{
-    audio::{ AudioFile, AudioDecrypt},
-    core::{
-        SpotifyId, SpotifyUri, cache::Cache,
-        config::SessionConfig, session::Session,Error
-    },
-    metadata::{Metadata, Track, audio::AudioFileFormat},
+    audio::{AudioDecrypt, AudioFile},
+    core::{Error, SpotifyId, SpotifyUri, cache::Cache, config::SessionConfig, session::Session},
+    metadata::{Metadata, Track, audio::AudioFileFormat, audio::AudioItem},
 };
 
-const CACHE: &str = ".cache";
-const CACHE_FILES: &str = ".cache/files";
+const CACHE: &str = "~/.cache";
+const SPOTIFY_OGG_HEADER_END: u64 = 0xa7;
 
 pub async fn download(spotify_track: SpotifyTrack) {
     let session_config = SessionConfig::default();
@@ -25,7 +21,7 @@ pub async fn download(spotify_track: SpotifyTrack) {
     //let mixer_config = MixerConfig::default();
     //let request_options = LoadRequestOptions::default();
 
-    let cache = Cache::new(Some(CACHE), Some(CACHE), Some(CACHE_FILES), None).unwrap();
+    let cache = Cache::new(Some(CACHE), None, None, None).unwrap();
     let credentials = cache
         .credentials()
         .ok_or(Error::unavailable("credentials not cached"))
@@ -42,19 +38,18 @@ pub async fn download(spotify_track: SpotifyTrack) {
         })
         .unwrap();
 
-    
-
     let session = Session::new(session_config, Some(cache));
     session.connect(credentials, true).await.unwrap();
 
     //format!("spotify:track:{}", track.id);
 
-    let track_uri = SpotifyUri::from_uri(format!("spotify:track:{}", spotify_track.id).as_str()).unwrap();
+    let track_uri =
+        SpotifyUri::from_uri(format!("spotify:track:{}", spotify_track.id).as_str()).unwrap();
     let track = Track::get(&session, &track_uri).await.unwrap();
     let file = track.files[&AudioFileFormat::OGG_VORBIS_320];
     let track_id = SpotifyId::from_base62(&spotify_track.id).unwrap();
 
-    let encrypted_file = AudioFile::open(&session, file, 1024*1024).await.unwrap();
+    let encrypted_file = AudioFile::open(&session, file, 1024 * 1024).await.unwrap();
 
     //let is_cached = encrypted_file.is_cached();
 
@@ -66,11 +61,11 @@ pub async fn download(spotify_track: SpotifyTrack) {
     let key = session.audio_key().request(track_id, file).await.unwrap();
 
     let mut decrypted_file = AudioDecrypt::new(Some(key), encrypted_file);
-    let mut buf : Vec<u8> = Vec::new();
+
+    let mut buf: Vec<u8> = Vec::new();
+    decrypted_file.seek(std::io::SeekFrom::Start(SPOTIFY_OGG_HEADER_END));
     let _size = decrypted_file.read_to_end(&mut buf).unwrap();
 
     let mut file = File::create("hede.ogg").unwrap();
     file.write_all(&mut buf);
-    
-
 }
