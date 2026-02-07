@@ -70,7 +70,7 @@ pub async fn download(spotify_track: SpotifyTrack) -> Result<(), Error> {
     let file = track.files[&AudioFileFormat::OGG_VORBIS_320];
     let track_id: SpotifyId = SpotifyId::from_base62(&spotify_track.id)?;
 
-    let encrypted_file = AudioFile::open(&session, file, 1024 * 1024).await?;
+    let encrypted_file = AudioFile::open(&session, file, 1024 * 1024 * 100).await?;
 
     let key = match session.audio_key().request(track_id, file).await {
         Ok(key) => Some(key),
