@@ -1276,7 +1276,7 @@ dependencies = [
  "librespot-core",
  "librespot-discovery",
  "librespot-metadata",
- "librespot-oauth 0.8.0",
+ "librespot-oauth",
  "librespot-playback",
  "librespot-protocol",
  "log",
@@ -1345,7 +1345,7 @@ dependencies = [
  "hyper-proxy2",
  "hyper-tls",
  "hyper-util",
- "librespot-oauth 0.8.0",
+ "librespot-oauth",
  "librespot-protocol",
  "log",
  "nonzero_ext",
@@ -1424,20 +1424,6 @@ dependencies = [
 [[package]]
 name = "librespot-oauth"
 version = "0.8.0"
-dependencies = [
- "log",
- "oauth2",
- "open",
- "reqwest",
- "thiserror 2.0.18",
- "url",
-]
-
-[[package]]
-name = "librespot-oauth"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d686417d49c9d2c363392ffe28d6e469daca20a82dc414740930e078f5829661"
 dependencies = [
  "log",
  "oauth2",
@@ -2620,7 +2606,7 @@ version = "0.1.0"
 dependencies = [
  "env_logger",
  "librespot",
- "librespot-oauth 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "librespot-oauth",
  "log",
  "regex",
  "strum",

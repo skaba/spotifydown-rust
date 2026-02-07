@@ -14,7 +14,7 @@ use crate::model::SpotifyTrack;
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     env_logger::builder()
-        .filter_module("librespot", LevelFilter::Debug)
+        .filter_module("librespot", LevelFilter::Info)
         .init();
 
     let track = SpotifyTrack {
