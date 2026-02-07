@@ -1,15 +1,10 @@
 mod model;
 mod service;
 
-
-use librespot::core::Error;
 use service::download;
-
-
-
+use model::SpotifyTrack;
+use librespot::core::Error;
 use log::LevelFilter;
-
-use crate::model::SpotifyTrack;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {

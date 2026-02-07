@@ -83,9 +83,18 @@ pub async fn download(spotify_track: SpotifyTrack) -> Result<(), Error> {
     // Not all audio files are encrypted. If we can't get a key, try loading the track
     // without decryption. If the file was encrypted after all, the decoder will fail
     // parsing and bail out, so we should be safe from outputting ear-piercing noise.
-    let key = session.audio_key().request(track_id, file).await?;
+    // Not all audio files are encrypted. If we can't get a key, try loading the track
+            // without decryption. If the file was encrypted after all, the decoder will fail
+            // parsing and bail out, so we should be safe from outputting ear-piercing noise.
+            let key = match session.audio_key().request(track_id, file).await {
+                Ok(key) => Some(key),
+                Err(e) => {
+                    "Unable to load key, continuing without decryption: {e}";
+                    None
+                }
+            };
 
-    let mut decrypted_file = AudioDecrypt::new(Some(key), encrypted_file);
+    let mut decrypted_file = AudioDecrypt::new(key, encrypted_file);
 
     let mut buf: Vec<u8> = Vec::new();
     decrypted_file.seek(std::io::SeekFrom::Start(SPOTIFY_OGG_HEADER_END));
