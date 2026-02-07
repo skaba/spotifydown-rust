@@ -14,4 +14,4 @@ strum = "0.27"
 strum_macros = "0.27"
 
 [patch.crates-io]
-librespot = { path = "../librespot" }
+librespot = { path = "librespot" }
